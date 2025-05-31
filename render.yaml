@@ -1,0 +1,56 @@
+services:
+  - type: web
+    name: kite-backend
+    env: python
+    build:
+      dockerfile: ./backend/Dockerfile
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.9.16
+      - key: PYTHONUNBUFFERED
+        value: 1
+      - key: PYTHONDONTWRITEBYTECODE
+        value: 1
+      - key: KITE_API_KEY
+        fromService:
+          name: kite-secrets
+          property: KITE_API_KEY
+      - key: KITE_API_SECRET
+        fromService:
+          name: kite-secrets
+          property: KITE_API_SECRET
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DATABASE_URL
+        fromDatabase:
+          name: kite-db
+          property: connectionString
+    plan: free
+    numInstances: 1
+    healthCheckPath: /api/v1/health
+
+  - type: web
+    name: kite-frontend
+    env: node
+    build:
+      dockerfile: ./frontend/Dockerfile
+    envVars:
+      - key: VITE_API_BASE_URL
+        sync: false  # Will be set manually in the dashboard
+    routes:
+      - type: rewrite
+        source: /api/*
+        destination: https://kite-backend.onrender.com/api/$1
+    plan: free
+
+databases:
+  - name: kite-db
+    databaseName: kite
+    user: kite
+    plan: free
+
+envVars:
+  - key: KITE_API_KEY
+    value: your_kite_api_key_here
+  - key: KITE_API_SECRET
+    value: your_kite_api_secret_here

@@ -1,0 +1,87 @@
+# See https://pre-commit.com for more information
+# See https://pre-commit.com/hooks.html for more hooks
+repos:
+-   repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.5.0
+    hooks:
+    -   id: check-added-large-files  # Prevent giant files from being committed
+    -   id: check-ast                   # Check that files parse as valid Python
+    -   id: check-byte-order-marker     # Check for files with a UTF-8 byte-order marker
+    -   id: check-case-conflict         # Check for files with names that would conflict on case-insensitive filesystems
+    -   id: check-docstring-first       # Check that docstrings are present and at the beginning of the file
+    -   id: check-json                  # Check JSON files for parse errors
+    -   id: check-merge-conflict        # Check for files that contain merge conflict strings
+    -   id: check-symlinks              # Check for broken symlinks
+    -   id: check-toml                  # Check TOML files for parse errors
+    -   id: check-yaml                  # Check YAML files for parse errors
+    -   id: debug-statements            # Check for debugger imports and breakpoint() calls in Python source
+    -   id: detect-aws-credentials      # Check for AWS credentials in files
+    -   id: detect-private-key          # Detect private keys in files
+    -   id: end-of-file-fixer           # Ensure files end with a newline
+    -   id: mixed-line-ending           # Ensure consistent line endings
+    -   id: name-tests-test             # Check that test files are named correctly
+    -   id: no-commit-to-branch         # Prevent commits to specified branches
+    -   id: requirements-txt-fixer      # Sort requirements.txt files
+    -   id: trailing-whitespace         # Remove trailing whitespace
+
+-   repo: https://github.com/psf/black
+    rev: 23.11.0
+    hooks:
+    -   id: black
+        language_version: python3.9
+        exclude: ^(frontend|migrations|tests/static)
+
+-   repo: https://github.com/pycqa/isort
+    rev: 5.13.2
+    hooks:
+    -   id: isort
+        name: isort (python)
+        exclude: ^(frontend|migrations|tests/static)
+
+-   repo: https://github.com/pycqa/flake8
+    rev: 6.1.0
+    hooks:
+    -   id: flake8
+        additional_dependencies: [flake8-bugbear, flake8-comprehensions, flake8-docstrings]
+        exclude: ^(frontend|migrations|tests/static)
+
+-   repo: https://github.com/pre-commit/mirrors-mypy
+    rev: v1.7.1
+    hooks:
+    -   id: mypy
+        additional_dependencies: [types-requests, types-python-dateutil, types-pytz, types-PyYAML]
+        exclude: ^(frontend|migrations|tests/static)
+
+-   repo: https://github.com/pre-commit/mirrors-prettier
+    rev: v3.1.0
+    hooks:
+    -   id: prettier
+        types_or: [javascript, typescript, css, scss, html, json, yaml, markdown, mdx]
+        exclude: ^(backend|migrations|tests/static)
+
+-   repo: https://github.com/compilerla/conventional-pre-commit
+    rev: v3.0.0
+    hooks:
+    -   id: conventional-pre-commit
+        stages: [commit-msg]
+        args: []
+
+# -   repo: https://github.com/commitizen-tools/commitizen
+#     rev: v3.10.0
+#     hooks:
+#     -   id: commitizen
+#         stages: [commit-msg]
+#         additional_dependencies: [commitizen==3.10.0]
+
+# -   repo: https://github.com/gruntwork-io/pre-commit
+#     rev: v0.1.17
+#     hooks:
+#     -   id: terraform-fmt
+#     -   id: terraform-validate
+#     -   id: tflint
+
+# -   repo: https://github.com/ansible/ansible-lint
+#     rev: v6.20.4
+#     hooks:
+#     -   id: ansible-lint
+#         files: \.(yaml|yml)$

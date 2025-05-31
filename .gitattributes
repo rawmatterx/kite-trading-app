@@ -1,0 +1,172 @@
+# Set default behavior to automatically normalize line endings.
+* text=auto eol=lf
+
+# Force binary files to use LF line endings
+*.{png,jpg,jpeg,gif,ico,svg,woff,woff2,ttf,eot,otf,pdf,zip,jar,war,class,bin,exe,dll,so,dylib,pyd,pyc,pyd,pdb,pdf,psd,ai,ps,eps,ico,icns,db,dat,mp3,mp4,avi,flv,mov,wav} binary
+
+# Force shell scripts to use LF line endings
+*.sh text eol=lf
+
+# Force Windows batch files to use CRLF line endings
+*.{cmd,[cC][mM][dD]} text eol=crlf
+*.{bat,[bB][aA][tT]} text eol=crlf
+
+# Force Python files to use LF line endings
+*.py text eol=lf
+*.pyi text eol=lf
+
+# Force JavaScript/TypeScript files to use LF line endings
+*.js text eol=lf
+*.jsx text eol=lf
+*.ts text eol=lf
+*.tsx text eol=lf
+*.json text eol=lf
+*.json5 text eol=lf
+*.jsonc text eol=lf
+
+# Force CSS/SCSS files to use LF line endings
+*.css text eol=lf
+*.scss text eol=lf
+*.sass text eol=lf
+*.less text eol=lf
+
+# Force HTML/XML files to use LF line endings
+*.html text eol=lf
+*.htm text eol=lf
+*.xml text eol=lf
+*.xsd text eol=lf
+*.xsl text eol=lf
+*.xslt text eol=lf
+
+# Force Markdown files to use LF line endings
+*.md text eol=lf
+*.markdown text eol=lf
+
+# Force YAML files to use LF line endings
+*.yaml text eol=lf
+*.yml text eol=lf
+
+# Force SQL files to use LF line endings
+*.sql text eol=lf
+
+# Force Docker files to use LF line endings
+Dockerfile* text eol=lf
+docker-compose*.yml text eol=lf
+
+# Force Nginx config files to use LF line endings
+*.conf text eol=lf
+
+# Force Git configuration files to use LF line endings
+.git* text eol=lf
+.editorconfig text eol=lf
+.prettierrc text eol=lf
+.eslintrc* text eol=lf
+.stylelintrc* text eol=lf
+
+# Force documentation files to use LF line endings
+LICENSE* text eol=lf
+CHANGELOG* text eol=lf
+README* text eol=lf
+CONTRIBUTING* text eol=lf
+CODE_OF_CONDUCT* text eol=lf
+SECURITY* text eol=lf
+
+# Force Python virtual environment files to be ignored
+venv/ export-ignore
+.venv/ export-ignore
+env/ export-ignore
+.env/ export-ignore
+ENV/ export-ignore
+
+# Force Node.js files to be ignored
+node_modules/ export-ignore
+
+# Force Python cache and build files to be ignored
+__pycache__/ export-ignore
+*.py[cod] export-ignore
+*$py.class export-ignore
+*.so export-ignore
+.Python export-ignore
+build/ export-ignore
+develop-eggs/ export-ignore
+dist/ export-ignore
+downloads/ export-ignore
+eggs/ export-ignore
+.eggs/ export-ignore
+lib/ export-ignore
+lib64/ export-ignore
+parts/ export-ignore
+sdist/ export-ignore
+var/ export-ignore
+wheels/ export-ignore
+*.egg-info/ export-ignore
+.installed.cfg export-ignore
+*.egg export-ignore
+
+# Force IDE specific files to be ignored
+.idea/ export-ignore
+.vscode/ export-ignore
+*.swp export-ignore
+*.swo export-ignore
+.DS_Store export-ignore
+Thumbs.db export-ignore
+
+# Force test and coverage files to be ignored
+htmlcov/ export-ignore
+.tox/ export-ignore
+.nox/ export-ignore
+.coverage export-ignore
+.coverage.* export-ignore
+*.cover export-ignore
+.hypothesis/ export-ignore
+.pytest_cache/ export-ignore
+coverage/ export-ignore
+
+# Force environment files to be ignored
+.env export-ignore
+.env.* export-ignore
+!.env.example
+
+# Force logs and local development files to be ignored
+logs/ export-ignore
+*.log export-ignore
+npm-debug.log* export-ignore
+yarn-debug.log* export-ignore
+yarn-error.log* export-ignore
+.python-version export-ignore
+
+# Force distribution and packaging files to be ignored
+.python-version export-ignore
+Pipfile export-ignore
+Pipfile.lock export-ignore
+poetry.lock export-ignore
+poetry.toml export-ignore
+pyproject.toml export-ignore
+setup.py export-ignore
+setup.cfg export-ignore
+tox.ini export-ignore
+
+# Force Jupyter Notebook files to be ignored
+.ipynb_checkpoints export-ignore
+*.ipynb export-ignore
+
+# Force database files to be ignored
+*.db export-ignore
+*.sqlite3 export-ignore
+
+# Force temporary files to be ignored
+*~ export-ignore
+*# export-ignore
+*.bak export-ignore
+*.swp export-ignore
+*.swo export-ignore
+.DS_Store export-ignore
+Thumbs.db export-ignore
+
+# Force compiled and minified files to be ignored
+*.min.js export-ignore
+*.min.css export-ignore
+*.min.html export-ignore
+
+# Force source maps to be ignored
+*.map export-ignore
