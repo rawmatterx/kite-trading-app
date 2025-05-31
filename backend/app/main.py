@@ -1,11 +1,12 @@
 import logging
 import os
+import sys
 from typing import List, Optional
 
-from fastapi import FastAPI, Request, status
+from fastapi import FastAPI, Request, status, Depends, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse
-from fastapi.exceptions import RequestValidationError, HTTPException
+from fastapi.responses import JSONResponse, HTMLResponse
+from fastapi.exceptions import RequestValidationError
 from fastapi.encoders import jsonable_encoder
 from pydantic import ValidationError
 from starlette.middleware.base import BaseHTTPMiddleware
@@ -14,6 +15,10 @@ from starlette.middleware.gzip import GZipMiddleware
 from app.core.config import settings
 from app.api.v1 import auth, strategy, orders, positions
 from app.api import health as health_router
+from app.db.session import init_db, Base, engine
+
+# Initialize database tables
+Base.metadata.create_all(bind=engine)
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -29,6 +34,25 @@ def create_application() -> FastAPI:
         redoc_url="/api/redoc" if settings.ENVIRONMENT != "production" else None,
         openapi_url="/api/openapi.json" if settings.ENVIRONMENT != "production" else None,
     )
+    
+    # Initialize database
+    init_db()
+    
+    # Add root endpoint
+    @app.get("/", response_class=HTMLResponse)
+    async def root():
+        return """
+        <html>
+            <head>
+                <title>Kite Trading API</title>
+            </head>
+            <body>
+                <h1>Kite Trading API</h1>
+                <p>API is running successfully!</p>
+                <p>Check out the <a href="/api/docs">API documentation</a>.</p>
+            </body>
+        </html>
+        """
 
     # Configure CORS
     origins = [origin.strip() for origin in settings.CORS_ORIGINS.split(",")]

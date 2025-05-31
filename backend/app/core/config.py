@@ -33,13 +33,13 @@ class Settings(BaseSettings):
     POSTGRES_PASSWORD: str = "postgres"
     POSTGRES_DB: str = "kiteapp"
     POSTGRES_PORT: str = "5432"
-    SQLALCHEMY_DATABASE_URI: Optional[PostgresDsn] = "postgresql://postgres:postgres@localhost:5432/kiteapp"
+    DATABASE_URL: Optional[PostgresDsn] = None
     
     @property
     def get_database_url(self) -> str:
-        """Get database URL from SQLALCHEMY_DATABASE_URI or generate from environment variables."""
-        if self.SQLALCHEMY_DATABASE_URI:
-            return str(self.SQLALCHEMY_DATABASE_URI)
+        """Get database URL from DATABASE_URL or generate from environment variables."""
+        if self.DATABASE_URL:
+            return str(self.DATABASE_URL)
         return f"postgresql://{self.POSTGRES_USER}:{self.POSTGRES_PASSWORD}@{self.POSTGRES_SERVER}:{self.POSTGRES_PORT}/{self.POSTGRES_DB}"
     
     # Kite Connect
