@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
+from sqlalchemy import text
 from typing import Dict, Any
 
 from app.db.session import get_db
@@ -12,7 +13,8 @@ router = APIRouter()
 def check_database(db: Session) -> Dict[str, Any]:
     """Check database connection"""
     try:
-        db.execute("SELECT 1")
+        db.execute(text("SELECT 1"))
+        db.commit()
         return {"database": "ok"}
     except Exception as e:
         return {"database": f"error: {str(e)}"}
