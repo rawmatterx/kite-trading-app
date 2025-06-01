@@ -1,11 +1,10 @@
-import { Box, Heading, VStack, Text, HStack, Stat, StatLabel, StatNumber, StatHelpText, useColorModeValue, Button, useToast } from '@chakra-ui/react';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { useAuth } from '../../contexts/AuthContext';
+import { Box, Heading, VStack, Text, Stat, StatLabel, StatNumber, StatHelpText, useColorModeValue, Button, useToast, SimpleGrid } from '@chakra-ui/react';
+import { useQuery } from '@tanstack/react-query';
+import { useAuth } from '../../hooks/useAuth';
 import api from '../../services/api';
 
 const Profile = () => {
-  const { user, logout } = useAuth();
-  const queryClient = useQueryClient();
+  const { logout } = useAuth();
   const toast = useToast();
   
   const { data: profile, isLoading } = useQuery({ 
@@ -27,7 +26,6 @@ const Profile = () => {
   };
 
   const cardBg = useColorModeValue('white', 'gray.700');
-  const borderColor = useColorModeValue('gray.200', 'gray.600');
 
   if (isLoading) {
     return <Box>Loading profile...</Box>;

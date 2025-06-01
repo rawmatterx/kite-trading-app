@@ -4,11 +4,11 @@ import api from '../../services/api';
 import type { Position } from '../../types/position';
 
 const Positions = () => {
-  const { data: positions, isLoading, error } = useQuery<Position[], Error>({
+  const { data: positions, isLoading, error } = useQuery({
     queryKey: ['positions'],
-    queryFn: async () => {
-      const response = await api.get<Position[]>('/positions');
-      return response.data;
+    queryFn: async (): Promise<Position[]> => {
+      const response = await api.get<{ net: Position[] }>('/positions');
+      return response.data.net || [];
     }
   });
 

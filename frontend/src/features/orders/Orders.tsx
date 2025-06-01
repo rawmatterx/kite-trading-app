@@ -2,6 +2,17 @@ import { Box, Heading, Table, Thead, Tbody, Tr, Th, Td, Badge, Text, useColorMod
 import { useQuery } from '@tanstack/react-query';
 import api from '../../services/api';
 
+interface Order {
+  order_id: string;
+  tradingsymbol: string;
+  transaction_type: 'BUY' | 'SELL';
+  quantity: number;
+  average_price: number | null;
+  status: string;
+  order_timestamp: string;
+  // Add other order properties as needed
+}
+
 const statusColorMap: { [key: string]: string } = {
   'COMPLETE': 'green',
   'OPEN': 'blue',
@@ -12,11 +23,18 @@ const statusColorMap: { [key: string]: string } = {
 };
 
 const Orders = () => {
-  const { data: orders, isLoading, error } = useQuery(['orders'], async () => {
-      const response = await api.get('/orders');
-      return response.data;
+  const { data: orders = [], isLoading, error } = useQuery<Order[]>({
+    queryKey: ['orders'],
+    queryFn: async () => {
+      try {
+        const response = await api.get<{ data: Order[] }>('/orders');
+        return response.data?.data || [];
+      } catch (error) {
+        console.error('Error fetching orders:', error);
+        return [];
+      }
     }
-  );
+  });
 
   const bgColor = useColorModeValue('white', 'gray.700');
 
@@ -35,7 +53,7 @@ const Orders = () => {
       </Heading>
 
       <Box borderWidth="1px" borderRadius="lg" overflow="hidden" bg={bgColor} boxShadow="sm">
-        {orders?.length > 0 ? (
+        {orders.length > 0 ? (
           <Table variant="simple">
             <Thead>
               <Tr>
@@ -49,7 +67,7 @@ const Orders = () => {
               </Tr>
             </Thead>
             <Tbody>
-              {orders.map((order: any) => (
+              {orders.map((order) => (
                 <Tr key={order.order_id} _hover={{ bg: 'gray.50' }}>
                   <Td fontSize="sm" fontFamily="mono">{order.order_id}</Td>
                   <Td fontWeight="medium">{order.tradingsymbol}</Td>

@@ -6,20 +6,8 @@ import { useQuery } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
 import { getMargins, getPositions } from '../../services/kiteService';
 
-// Position type from kiteService
-type Position = {
-  tradingsymbol: string;
-  exchange: string;
-  product: string;
-  quantity: number;
-  average_price: number;
-  last_price: number;
-  pnl: number;
-  day_change: number;
-  value: number;
-  unrealised: number;
-  realised: number;
-};
+// Import Position type from the shared types
+import type { Position } from '../../types/position';
 
 const Dashboard = () => {
   const toast = useToast();
@@ -55,7 +43,36 @@ const Dashboard = () => {
     error: positionsError,
   } = useQuery({
     queryKey: ['positions'],
-    queryFn: getPositions,
+    queryFn: async (): Promise<Position[]> => {
+      const data = await getPositions();
+      // Map the API response to our Position type
+      return (data.net || []).map(pos => ({
+        tradingsymbol: pos.tradingsymbol,
+        exchange: pos.exchange,
+        instrument_token: pos.instrument_token,
+        product: pos.product,
+        quantity: pos.quantity,
+        average_price: pos.average_price,
+        last_price: pos.last_price,
+        pnl: pos.pnl,
+        day_pnl: 0, // Will be calculated or updated from API if available
+        day_change: 0, // Will be calculated or updated from API if available
+        day_change_percentage: 0, // Will be calculated or updated from API if available
+        m2m: 0, // Will be updated from API if available
+        buy_price: 0, // Will be updated from API if available
+        buy_quantity: 0, // Will be updated from API if available
+        buy_value: 0, // Will be updated from API if available
+        sell_price: 0, // Will be updated from API if available
+        sell_quantity: 0, // Will be updated from API if available
+        sell_value: 0, // Will be updated from API if available
+        multiplier: 1, // Default value, update if available
+        realized: 0, // Will be updated from API if available
+        unrealized: pos.unrealised || 0, // Using API's unrealised value
+        value: pos.value || 0,
+        collateral_quantity: 0, // Default value, update if available
+        collateral_type: '' // Default value, update if available
+      }));
+    },
     refetchInterval: 30000, // Refetch every 30 seconds
   });
 
@@ -153,7 +170,7 @@ const Dashboard = () => {
           <Heading size="md">Positions</Heading>
         </CardHeader>
         <CardBody>
-          {positionsData?.net && positionsData.net.length > 0 ? (
+          {positionsData && positionsData.length > 0 ? (
             <Table variant="simple" size="sm">
               <Thead>
                 <Tr>
@@ -166,9 +183,9 @@ const Dashboard = () => {
                 </Tr>
               </Thead>
               <Tbody>
-                {positionsData.net
+                {positionsData
                   .filter((p: Position) => p.quantity !== 0)
-                  .map((position: Position) => (
+                  .map((position) => (
                     <Tr key={`${position.tradingsymbol}-${position.exchange}`}>
                       <Td>
                         <Text fontWeight="bold">{position.tradingsymbol}</Text>
@@ -181,10 +198,10 @@ const Dashboard = () => {
                       <Td isNumeric>₹{position.last_price?.toFixed(2)}</Td>
                       <Td 
                         isNumeric 
-                        color={position.unrealised >= 0 ? 'green.500' : 'red.500'}
+                        color={position.unrealized >= 0 ? 'green.500' : 'red.500'}
                       >
-                        {position.unrealised >= 0 ? '+' : ''}
-                        ₹{Math.abs(position.unrealised || 0).toFixed(2)}
+                        {position.unrealized >= 0 ? '+' : ''}
+                        ₹{Math.abs(position.unrealized || 0).toFixed(2)}
                       </Td>
                       <Td isNumeric>
                         ₹{Math.abs(position.value || 0).toFixed(2)}

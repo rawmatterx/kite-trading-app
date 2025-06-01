@@ -1,5 +1,5 @@
 import api from './api';
-import { AxiosResponse } from 'axios';
+import type { AxiosResponse } from 'axios';
 
 interface MarginsResponse {
   equity?: {
@@ -59,7 +59,36 @@ interface PositionsResponse {
     unrealised: number;
     value: number;
   }>;
-  day: any[]; // Define this interface if you need to use day positions
+  day: Array<{
+    average_price: number;
+    buy_m2m: number;
+    buy_price: number;
+    buy_quantity: number;
+    buy_value: number;
+    close_price: number;
+    day_buy_price: number;
+    day_buy_quantity: number;
+    day_buy_value: number;
+    day_sell_price: number;
+    day_sell_quantity: number;
+    day_sell_value: number;
+    exchange: string;
+    instrument_token: number;
+    last_price: number;
+    m2m: number;
+    multiplier: number;
+    overnight_quantity: number;
+    pnl: number;
+    product: string;
+    quantity: number;
+    sell_m2m: number;
+    sell_price: number;
+    sell_quantity: number;
+    sell_value: number;
+    tradingsymbol: string;
+    unrealised: number;
+    value: number;
+  }>; // Define this interface if you need to use day positions
 }
 
 export const getMargins = async (): Promise<MarginsResponse> => {
@@ -82,7 +111,26 @@ export const getPositions = async (): Promise<PositionsResponse> => {
   }
 };
 
-export const getHoldings = async (): Promise<any> => {
+interface Holding {
+  average_price: number;
+  collateral_quantity: number;
+  collateral_type: string;
+  day_change: number;
+  day_change_percentage: number;
+  exchange: string;
+  instrument_token: number;
+  isin: string;
+  last_price: number;
+  pnl: number;
+  price: number;
+  product: string;
+  quantity: number;
+  t1_quantity: number;
+  tradingsymbol: string;
+  used_quantity: number;
+}
+
+export const getHoldings = async (): Promise<Holding[]> => {
   try {
     const response = await api.get('/api/v1/holdings');
     return response.data;
