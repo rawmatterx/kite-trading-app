@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link as RouterLink } from 'react-router-dom';
 import {
   Box,
   Button,
@@ -11,18 +11,12 @@ import {
   Text,
   useToast,
   Link as ChakraLink,
-  InputGroup,
-  InputRightElement,
-  IconButton,
+  Container
 } from '@chakra-ui/react';
-import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons';
-import { useAuth } from '../../contexts/AuthContext';
-import { Link as RouterLink } from 'react-router-dom';
+import { useAuth } from '../../hooks/useAuth';
 
 const Login = () => {
   const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const { login } = useAuth();
   const navigate = useNavigate();
@@ -31,10 +25,10 @@ const Login = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!email || !password) {
+    if (!email) {
       toast({
         title: 'Error',
-        description: 'Please fill in all fields',
+        description: 'Please enter your email',
         status: 'error',
         duration: 5000,
         isClosable: true,
@@ -44,7 +38,7 @@ const Login = () => {
 
     try {
       setIsLoading(true);
-      await login(email, password);
+      await login(email);
       toast({
         title: 'Login successful',
         status: 'success',
@@ -52,7 +46,8 @@ const Login = () => {
         isClosable: true,
       });
       navigate('/');
-    } catch (error: any) {
+    } catch (err) {
+      const error = err as Error & { response?: { data?: { detail?: string } } };
       console.error('Login error:', error);
       toast({
         title: 'Login failed',
@@ -101,45 +96,22 @@ const Login = () => {
                 />
               </FormControl>
 
-              <FormControl id="password" isRequired>
-                <FormLabel>Password</FormLabel>
-                <InputGroup>
-                  <Input
-                    type={showPassword ? 'text' : 'password'}
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    placeholder="Enter your password"
-                    autoComplete="current-password"
-                  />
-                  <InputRightElement h="full">
-                    <Button
-                      variant="ghost"
-                      onClick={() => setShowPassword(!showPassword)}
-                      aria-label={showPassword ? 'Hide password' : 'Show password'}
-                    >
-                      {showPassword ? <ViewOffIcon /> : <ViewIcon />}
-                    </Button>
-                  </InputRightElement>
-                </InputGroup>
-              </FormControl>
-
               <Button
                 type="submit"
                 colorScheme="blue"
-                isLoading={isLoading}
-                loadingText="Signing in..."
                 width="full"
                 mt={4}
-                size="lg"
+                isLoading={isLoading}
+                loadingText="Signing in..."
               >
                 Sign In
               </Button>
             </VStack>
           </Box>
-
-          <Text textAlign="center">
+          
+          <Text>
             Don't have an account?{' '}
-            <ChakraLink as={RouterLink} to="/register" color="blue.500" fontWeight="medium">
+            <ChakraLink as={RouterLink} to="/register" color="blue.500">
               Sign up
             </ChakraLink>
           </Text>

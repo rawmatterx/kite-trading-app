@@ -1,7 +1,7 @@
 import { Flex, Button, useColorMode, useColorModeValue, Box, Text } from '@chakra-ui/react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { MoonIcon, SunIcon } from '@chakra-ui/icons';
-import { useAuth } from '../contexts/AuthContext';
+import { useAuth } from '../hooks/useAuth';
 
 const Navbar = () => {
   const { colorMode, toggleColorMode } = useColorMode();

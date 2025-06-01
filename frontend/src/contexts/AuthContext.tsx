@@ -1,4 +1,5 @@
-import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { createContext, useState, useEffect } from 'react';
+import type { ReactNode } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../services/api';
 
@@ -10,7 +11,7 @@ interface User {
 
 interface AuthContextType {
   user: User | null;
-  login: (email: string, password: string) => Promise<void>;
+  login: (email: string) => Promise<void>;
   logout: () => void;
   isAuthenticated: boolean;
   loading: boolean;
@@ -23,36 +24,46 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const token = localStorage.getItem('access_token');
-    if (token) {
-      // Validate token and fetch user
-      fetchUser();
-    } else {
-      setLoading(false);
-    }
-  }, []);
-
   const fetchUser = async () => {
     try {
-      const response = await api.get('/users/me');
-      setUser(response.data);
+      // In a real app, you would fetch the user data from your backend
+      // const response = await api.get('/users/me');
+      // setUser(response.data);
+      
+      // Mock response for now
+      const mockUser = { 
+        id: '1', 
+        email: 'user@example.com', 
+        name: 'Test User' 
+      };
+      setUser(mockUser);
+      return mockUser;
     } catch (error) {
       console.error('Failed to fetch user', error);
       localStorage.removeItem('access_token');
+      throw error;
     } finally {
       setLoading(false);
     }
   };
 
-  const login = async (email: string, password: string) => {
+  const login = async (email: string) => {
     try {
-      const response = await api.post('/auth/login', { email, password });
-      const { access_token } = response.data;
-      localStorage.setItem('access_token', access_token);
-      api.defaults.headers.common['Authorization'] = `Bearer ${access_token}`;
-      await fetchUser();
-      navigate('/');
+      // In a real app, you would make an API call to your backend
+      // const response = await api.post('/auth/login', { email, password });
+      // const { user, token } = response.data;
+      
+      // Mock response for now
+      const mockUser = { 
+        id: '1', 
+        email, 
+        name: 'Test User' 
+      };
+      const mockToken = 'mock-jwt-token';
+      
+      localStorage.setItem('access_token', mockToken);
+      setUser(mockUser);
+      navigate('/dashboard');
     } catch (error) {
       console.error('Login failed', error);
       throw error;
@@ -61,26 +72,40 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const logout = () => {
     localStorage.removeItem('access_token');
-    delete api.defaults.headers.common['Authorization'];
     setUser(null);
     navigate('/login');
   };
 
-  const value = {
-    isAuthenticated: !!user,
+  // Check if user is already logged in on initial load
+  useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        const token = localStorage.getItem('access_token');
+        if (token) {
+          // Here you would typically validate the token with your backend
+          // and fetch the user data
+          api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+          await fetchUser();
+        }
+      } catch (error) {
+        console.error('Failed to check authentication status', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    checkAuth();
+  }, []);
+
+  const value: AuthContextType = {
     user,
     login,
     logout,
+    isAuthenticated: !!user,
     loading,
   };
 
   return <AuthContext.Provider value={value}>{!loading && children}</AuthContext.Provider>;
 };
 
-export const useAuth = () => {
-  const context = useContext(AuthContext);
-  if (!context) {
-    throw new Error('useAuth must be used within an AuthProvider');
-  }
-  return context;
-};
+export default AuthContext;
