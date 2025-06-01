@@ -5,26 +5,22 @@
       "src": "package.json",
       "use": "@vercel/static-build",
       "config": {
-        "distDir": "dist",
-        "outputDirectory": "dist"
+        "distDir": "dist"
       }
     }
   ],
   "routes": [
     {
-      "src": "^/assets/(.*)",
+      "src": "/assets/(.*)",
       "dest": "/assets/$1"
     },
     {
-      "src": "^/favicon.ico",
+      "src": "/favicon.ico",
       "dest": "/favicon.ico"
     },
     {
-      "src": "^/.*",
+      "src": "^/(.*)",
       "dest": "/index.html"
     }
-  ],
-  "buildCommand": "npm run build",
-  "outputDirectory": "dist",
-  "framework": "vite"
+  ]
 }

@@ -8,8 +8,8 @@ export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '');
 
   return {
+    base: './', // This ensures assets are loaded from the correct path
     plugins: [react()],
-    // Explicitly define the `process.env` type
     define: {
       'process.env': env,
       'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'production'),
@@ -18,6 +18,7 @@ export default defineConfig(({ mode }) => {
       outDir: 'dist',
       assetsDir: 'assets',
       sourcemap: true, // Enable source maps for debugging
+      emptyOutDir: true, // Ensure the output directory is cleaned before building
     },
     server: {
       port: 3000,
